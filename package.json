@@ -19,7 +19,8 @@
     "@nuxtjs/axios": "^5.3.6",
     "lodash": "^4.17.15",
     "nuxt": "^2.0.0",
-    "nuxt-fontawesome": "^0.4.0"
+    "nuxt-fontawesome": "^0.4.0",
+    "qr-code-with-logo": "^1.1.0"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.0",

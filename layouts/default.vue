@@ -5,6 +5,7 @@
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
       width="350"
+      class="menu-ulises"
     >
       <v-list dense>
         <template v-for="item in items">
@@ -62,6 +63,33 @@
             </v-list-item-content>
           </v-list-item>
         </template>
+        <v-list-item link>
+          <v-list-item-action @click="openCart()">
+            <CtIcon :icon="['fas', 'file-alt']" class="primary--text" />
+          </v-list-item-action>
+          <v-list-item-content @click="openCart()">
+            <v-list-item-title class="primary--text">
+              La carta
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-row dense>
+        <v-col cols="12" id="qr_code">
+          &nbsp;
+        </v-col>
+      </v-row>
+      <v-list dense>
+        <v-list-item link>
+          <v-list-item-action @click="downloadQr()">
+            <CtIcon :icon="['fas', 'download']" class="primary--text" />
+          </v-list-item-action>
+          <v-list-item-content @click="downloadQr()">
+            <v-list-item-title class="primary--text">
+              Descargar QR
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-content>
@@ -163,6 +191,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
+import QrCodeWithLogo from 'qr-code-with-logo'
 
 export default {
   props: {
@@ -174,11 +203,11 @@ export default {
     drawer: false,
     items: [
       { icon: ['fas', 'cube'], text: 'Productos', path: '/product' },
-      { icon: ['fas', 'cube'], text: 'Productos - Categorías', path: '/taxon' },
+      { icon: ['fas', 'align-justify'], text: 'Productos - Categorías', path: '/taxon' },
       { icon: ['fas', 'cube'], text: 'Complementos', path: '/complement' },
-      { icon: ['fas', 'cube'], text: 'Complementos - Categorías', path: '/complement-taxon' },
-      { icon: ['fas', 'cube'], text: 'Canales', path: '/channel' },
-      { icon: ['fas', 'cube'], text: 'Vendedores', path: '/vendor' },
+      { icon: ['fas', 'align-justify'], text: 'Complementos - Categorías', path: '/complement-taxon' },
+      { icon: ['fas', 'store'], text: 'Canales', path: '/channel' },
+      { icon: ['fas', 'id-card'], text: 'Vendedores', path: '/vendor' },
     ],
   }),
 
@@ -188,7 +217,40 @@ export default {
     }
   },
 
+  mounted() {
+    const myCanvas = document.createElement('canvas')
+    myCanvas.id = 'qr_code_canvas'
+    document.getElementById('qr_code').appendChild(myCanvas)
+
+    QrCodeWithLogo.toCanvas({
+      canvas: myCanvas,
+      content: 'https://miolimpo.org',
+      width: 300,
+      logo: {
+        src: '/img/ulises_logo_180.png',
+        radius: 8
+      },
+      nodeQrCodeOptions: {
+        color: {
+          dark: '#ff9320',
+        }
+      },
+    })
+  },
+
   methods: {
+    openCart() {
+      var win = window.open('/carta', '_blank');
+      win.focus();
+    },
+
+    downloadQr() {
+      let link = document.createElement('a');
+      link.download = 'código-qr-ulises.png';
+      link.href = document.getElementById('qr_code_canvas').toDataURL()
+      link.click();
+    },
+
     afterLogout(){
       this.setToken('')
       this.removeUser()

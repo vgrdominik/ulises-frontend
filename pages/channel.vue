@@ -5,7 +5,12 @@
     </template>
     <v-container fluid>
       <v-row dense>
-        <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+        <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+          <v-row v-for="(serverError, index) in serverMessage" :key="index">
+            <v-col cols="12" v-html="serverError" />
+          </v-row>
+        </v-col>
+        <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
       </v-row>
       <v-data-iterator
         :items="channels"
@@ -207,7 +212,12 @@
             <v-col cols="12" class="mt-5">
               <CtTextField append-icon="mdi-fingerprint" label="Token" v-model="channel.token"/>
             </v-col>
-            <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+            <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+              <v-row v-for="(serverError, index) in serverMessage" :key="index">
+                <v-col cols="12" v-html="serverError" />
+              </v-row>
+            </v-col>
+            <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
           </v-row>
         </v-container>
       </v-card-text>
@@ -310,14 +320,14 @@ export default {
     updateChannel(channelId) {
       this.$axios.get('/api/channel/' + channelId)
         .then((response) => (response.data) ? this.initUpdateChannel(response.data) : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error get channel.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     removeChannel(channelId) {
       if (channelId !== null) {
         this.$axios.delete('/api/channel/' + channelId)
           .then((response) => this.fetch())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error remove channel.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -333,13 +343,13 @@ export default {
       if (this.channelId === 0) {
         this.$axios.post('/api/channel', this.channel)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error create channel.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
       if (this.channelId !== null) {
         this.$axios.put('/api/channel/' + this.channelId, this.channel)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error update channel.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -349,7 +359,7 @@ export default {
     fetch() {
       this.$axios.get('/api/channel')
         .then((response) => (response.data) ? this.channels = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list channels.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     // DataIterator

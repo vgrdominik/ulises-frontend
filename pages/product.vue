@@ -5,7 +5,12 @@
     </template>
     <v-container fluid>
       <v-row dense>
-        <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+        <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+          <v-row v-for="(serverError, index) in serverMessage" :key="index">
+            <v-col cols="12" v-html="serverError" />
+          </v-row>
+        </v-col>
+        <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
       </v-row>
       <v-data-iterator
         :items="products"
@@ -261,7 +266,12 @@
             <v-col cols="12" class="mt-5">
               <CtCheckbox label="Está disponible" v-model="product.is_available"/>
             </v-col>
-            <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+            <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+              <v-row v-for="(serverError, index) in serverMessage" :key="index">
+                <v-col cols="12" v-html="serverError" />
+              </v-row>
+            </v-col>
+            <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
           </v-row>
         </v-container>
       </v-card-text>
@@ -416,14 +426,14 @@ export default {
     updateProduct(productId) {
       this.$axios.get('/api/product/' + productId)
         .then((response) => (response.data) ? this.initUpdateProduct(response.data) : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error get product.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     removeProduct(productId) {
       if (productId !== null) {
         this.$axios.delete('/api/product/' + productId)
           .then((response) => this.fetch())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error remove product.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -439,13 +449,13 @@ export default {
       if (this.productId === 0) {
         this.$axios.post('/api/product', this.product)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error create product.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
       if (this.productId !== null) {
         this.$axios.put('/api/product/' + this.productId, this.product)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error update product.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -455,19 +465,19 @@ export default {
     fetch() {
       this.$axios.get('/api/product')
         .then((response) => (response.data) ? this.products = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list products.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchVendors() {
       this.$axios.get('/api/vendor')
         .then((response) => (response.data) ? this.vendors = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list products.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchTaxons() {
       this.$axios.get('/api/taxon')
         .then((response) => (response.data) ? this.taxons = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list products.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     // DataIterator

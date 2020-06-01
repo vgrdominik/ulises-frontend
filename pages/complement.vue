@@ -5,7 +5,12 @@
     </template>
     <v-container fluid>
       <v-row dense>
-        <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+        <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+          <v-row v-for="(serverError, index) in serverMessage" :key="index">
+            <v-col cols="12" v-html="serverError" />
+          </v-row>
+        </v-col>
+        <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
       </v-row>
       <v-data-iterator
         :items="complements"
@@ -237,7 +242,12 @@
             <v-col cols="12" class="mt-5">
               <CtCheckbox label="Está disponible" v-model="complement.is_available"/>
             </v-col>
-            <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+            <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+              <v-row v-for="(serverError, index) in serverMessage" :key="index">
+                <v-col cols="12" v-html="serverError" />
+              </v-row>
+            </v-col>
+            <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
           </v-row>
         </v-container>
       </v-card-text>
@@ -377,14 +387,14 @@ export default {
     updateComplement(complementId) {
       this.$axios.get('/api/complement/' + complementId)
         .then((response) => (response.data) ? this.initUpdateComplement(response.data) : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error get complement.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     removeComplement(complementId) {
       if (complementId !== null) {
         this.$axios.delete('/api/complement/' + complementId)
           .then((response) => this.fetch())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error remove complement.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -400,13 +410,13 @@ export default {
       if (this.complementId === 0) {
         this.$axios.post('/api/complement', this.complement)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error create complement.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
       if (this.complementId !== null) {
         this.$axios.put('/api/complement/' + this.complementId, this.complement)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error update complement.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -416,19 +426,19 @@ export default {
     fetch() {
       this.$axios.get('/api/complement')
         .then((response) => (response.data) ? this.complements = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list complements.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchProducts() {
       this.$axios.get('/api/product')
         .then((response) => (response.data) ? this.products = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list complements.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchComplementTaxons() {
       this.$axios.get('/api/complementTaxon')
         .then((response) => (response.data) ? this.complementTaxons = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list complements.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     // DataIterator

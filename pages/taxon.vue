@@ -5,7 +5,12 @@
     </template>
     <v-container fluid>
       <v-row dense>
-        <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+        <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+          <v-row v-for="(serverError, index) in serverMessage" :key="index">
+            <v-col cols="12" v-html="serverError" />
+          </v-row>
+        </v-col>
+        <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
       </v-row>
       <v-data-iterator
         :items="taxons"
@@ -219,7 +224,12 @@
             <v-col cols="12" class="mt-5">
               <CtCheckbox label="Está disponible" v-model="taxon.is_available"/>
             </v-col>
-            <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+            <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+              <v-row v-for="(serverError, index) in serverMessage" :key="index">
+                <v-col cols="12" v-html="serverError" />
+              </v-row>
+            </v-col>
+            <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
           </v-row>
         </v-container>
       </v-card-text>
@@ -341,14 +351,14 @@ export default {
     updateTaxon(taxonId) {
       this.$axios.get('/api/taxon/' + taxonId)
         .then((response) => (response.data) ? this.initUpdateTaxon(response.data) : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error get taxon.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     removeTaxon(taxonId) {
       if (taxonId !== null) {
         this.$axios.delete('/api/taxon/' + taxonId)
           .then((response) => this.fetch())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error remove taxon.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -364,13 +374,13 @@ export default {
       if (this.taxonId === 0) {
         this.$axios.post('/api/taxon', this.taxon)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error create taxon.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
       if (this.taxonId !== null) {
         this.$axios.put('/api/taxon/' + this.taxonId, this.taxon)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error update taxon.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -380,19 +390,19 @@ export default {
     fetch() {
       this.$axios.get('/api/taxon')
         .then((response) => (response.data) ? this.taxons = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list taxons.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchChannels() {
       this.$axios.get('/api/channel')
         .then((response) => (response.data) ? this.channelsToFrom = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list taxons.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchTaxons() {
       this.$axios.get('/api/taxon')
         .then((response) => (response.data) ? this.taxonsToFrom = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list taxons.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     // DataIterator

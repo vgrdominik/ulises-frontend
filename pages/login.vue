@@ -7,7 +7,12 @@
         <v-col cols="12">
           <CtTextField type="password" append-icon="mdi-lock" label="Password" v-model="signInData.password"/>
         </v-col>
-        <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+        <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+          <v-row v-for="(serverError, index) in serverMessage" :key="index">
+            <v-col cols="12" v-html="serverError" />
+          </v-row>
+        </v-col>
+        <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
         <v-col cols="12">
           <CtBtn @click="login()" type="primary" block>
             Entrar
@@ -61,7 +66,7 @@ export default {
     login(){
       this.$axios.post('/api/login', this.signInData)
         .then((response) => (response.data.token) ? this.afterLogin(response) : this.setServerMessage(response.data))
-        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.') ? this.setServerMessage('Datos inválidos.') : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     ...mapActions({

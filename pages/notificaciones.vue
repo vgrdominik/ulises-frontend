@@ -40,7 +40,7 @@ export default {
     fetch() {
       this.$axios.get('/api/event')
         .then((response) => (response.data) ? this.events = response.data : '')
-        .catch((error) => (error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     ...mapActions({

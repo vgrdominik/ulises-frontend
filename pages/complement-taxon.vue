@@ -5,7 +5,12 @@
     </template>
     <v-container fluid>
       <v-row dense>
-        <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+        <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+          <v-row v-for="(serverError, index) in serverMessage" :key="index">
+            <v-col cols="12" v-html="serverError" />
+          </v-row>
+        </v-col>
+        <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
       </v-row>
       <v-data-iterator
         :items="complementTaxons"
@@ -207,7 +212,12 @@
             <v-col cols="12" class="mt-5">
               <CtTextField append-icon="mdi-fingerprint" label="Orden" v-model="complementTaxon.order"/>
             </v-col>
-            <v-col cols="12" v-if="serverMessage" v-html="serverMessage" class="error--text" />
+            <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
+              <v-row v-for="(serverError, index) in serverMessage" :key="index">
+                <v-col cols="12" v-html="serverError" />
+              </v-row>
+            </v-col>
+            <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
           </v-row>
         </v-container>
       </v-card-text>
@@ -318,14 +328,14 @@ export default {
     updateComplementTaxon(complementTaxonId) {
       this.$axios.get('/api/complementTaxon/' + complementTaxonId)
         .then((response) => (response.data) ? this.initUpdateComplementTaxon(response.data) : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error get complement taxon.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     removeComplementTaxon(complementTaxonId) {
       if (complementTaxonId !== null) {
         this.$axios.delete('/api/complementTaxon/' + complementTaxonId)
           .then((response) => this.fetch())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error remove complement taxon.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -341,13 +351,13 @@ export default {
       if (this.complementTaxonId === 0) {
         this.$axios.post('/api/complementTaxon', this.complementTaxon)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error create complementTaxon.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
       if (this.complementTaxonId !== null) {
         this.$axios.put('/api/complementTaxon/' + this.complementTaxonId, this.complementTaxon)
           .then(() => this.postSave())
-          .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error update complementTaxon.'))
+          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
 
@@ -357,7 +367,7 @@ export default {
     fetch() {
       this.$axios.get('/api/complementTaxon')
         .then((response) => (response.data) ? this.complementTaxons = response.data : '')
-        .catch((error) => (error.response && error.response.data && error.response.data.message) ? this.setServerMessage(error.response.data.message) : this.setServerMessage('Error list complement taxons.'))
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     // DataIterator

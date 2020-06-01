@@ -204,10 +204,6 @@ export default {
     items: [
       { icon: ['fas', 'cube'], text: 'Productos', path: '/product' },
       { icon: ['fas', 'align-justify'], text: 'Productos - Categorías', path: '/taxon' },
-      { icon: ['fas', 'cube'], text: 'Complementos', path: '/complement' },
-      { icon: ['fas', 'align-justify'], text: 'Complementos - Categorías', path: '/complement-taxon' },
-      { icon: ['fas', 'store'], text: 'Canales', path: '/channel' },
-      { icon: ['fas', 'id-card'], text: 'Vendedores', path: '/vendor' },
     ],
   }),
 

@@ -116,7 +116,7 @@
             <a href="/" title="Home">
               <v-row>
                 <v-col class="pr-0 mr-0">
-                  <v-img src="img/ulises_logo_180.png" class="float-right" width="50px" title="Ulises" alt="Ulises" />
+                  <v-img src="/img/ulises_logo_180.png" class="float-right" width="50px" title="Ulises" alt="Ulises" />
                 </v-col>
                 <v-col class="mt-2 ml-3 pl-0 title font-weight-black">
                   Ulises

@@ -57,7 +57,7 @@
                 <v-btn
                   large
                   depressed
-                  color="blue"
+                  color="primary"
                   :value="false"
                 >
                   <v-icon>mdi-arrow-up</v-icon>
@@ -65,7 +65,7 @@
                 <v-btn
                   large
                   depressed
-                  color="blue"
+                  color="primary"
                   :value="true"
                 >
                   <v-icon>mdi-arrow-down</v-icon>
@@ -120,6 +120,7 @@
                 <v-col
                   v-for="(key, index) in filteredKeys"
                   :key="index"
+                  class="text-center"
                 >
                   <span :class="{ 'primary--text': sortBy === key }" v-html="taxonItem[key.key]" />
                 </v-col>
@@ -169,7 +170,7 @@
             <v-btn
               fab
               dark
-              color="blue darken-3"
+              color="primary darken-3"
               class="mr-1"
               @click="formerPage"
             >
@@ -178,7 +179,7 @@
             <v-btn
               fab
               dark
-              color="blue darken-3"
+              color="primary darken-3"
               class="ml-1"
               @click="nextPage"
             >
@@ -200,29 +201,25 @@
           class="overflow-y-auto"
         >
           <v-row dense>
+            <input type="hidden" v-model="taxon.channel_id"/>
+            <input type="hidden" v-model="taxon.parent_taxon_id"/>
             <v-col cols="12" class="mt-5">
-              <CtSelect :items="channelsToFrom" item-text="description" item-value="id" label="Canal" v-model="taxon.channel_id"/>
+              <CtTextField append-icon="mdi-format-text-variant" label="Nombre" v-model="taxon.description"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtSelect :items="taxonsToFrom" item-text="description" item-value="id" label="Categoría padre" v-model="taxon.parent_taxon_id"/>
+              <CtTextField append-icon="mdi-tag-text-outline" label="Nombre corto" v-model="taxon.short_description"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Nombre" v-model="taxon.description"/>
+              <CtTextarea append-icon="mdi-text" label="Detalles" v-model="taxon.details"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Nombre corto" v-model="taxon.short_description"/>
+              <CtTextField append-icon="mdi-swap-vertical" label="Orden" v-model="taxon.order"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtTextarea append-icon="mdi-fingerprint" label="Detalles" v-model="taxon.details"/>
+              <CtTextField append-icon="mdi-file-image" label="Url de la foto" v-model="taxon.photo"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Orden" v-model="taxon.order"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Foto" v-model="taxon.photo"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Está disponible" v-model="taxon.is_available"/>
+              <v-checkbox label="Está disponible" v-model="taxon.is_available"/>
             </v-col>
             <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
               <v-row v-for="(serverError, index) in serverMessage" :key="index">
@@ -245,7 +242,9 @@
 
 <script>
 import { mapActions } from 'vuex'
+import CtTextField from "~/components/CtTextField";
 export default {
+  components: {CtTextField},
   middleware: 'authenticated',
 
   data() {
@@ -260,7 +259,8 @@ export default {
         order: '',
         photo: '',
         creator_id: null,
-        channel_id: null,
+        //channel_id: null,
+        channel_id: 1,
         parent_taxon_id: null,
         is_available: true,
       },
@@ -322,7 +322,8 @@ export default {
       this.taxon.details = ''
       this.taxon.order = ''
       this.taxon.photo = ''
-      this.taxon.channel_id = null
+      //this.taxon.channel_id = null
+      this.taxon.channel_id = 1
       this.taxon.product_id = null
       this.taxon.parent_taxon_id = null
     },

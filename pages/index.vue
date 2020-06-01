@@ -173,45 +173,45 @@
         Patrocinadores
       </h1>
     </v-col>
-    <v-row>
+    <v-row dense>
       <v-col cols="12" class="text-center">
         <p>Empresas o personas que hacen posible el proyecto.</p>
       </v-col>
       <v-col cols="12">
-        <CtCard elevation="5" type="empty" flat tile width="100%" class="white">
+        <CtCard elevation="5" type="empty" flat tile width="100%" class="white" id="partners">
           <v-card-text class="secondary--text text-center">
             <v-row>
-              <v-spacer />
-              <v-col cols="4">
+              <v-spacer v-if="$vuetify.breakpoint.smAndUp" />
+              <v-col  cols="12" sm="4">
                 <v-img src="/img/ciclotic_h_512.png" title="cicloTIC" alt="cicloTIC" />
               </v-col>
-              <v-spacer />
+              <v-spacer v-if="$vuetify.breakpoint.smAndUp" />
             </v-row>
             <v-row class="mt-4">
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <v-img src="/img/tu_empresa_h_512.png" class="example_partner" title="Tu empresa" alt="Tu empresa" />
               </v-col>
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <v-img src="/img/una_persona.png" class="example_partner" title="Una persona" alt="Una persona" />
               </v-col>
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <v-img src="/img/tu_restaurante.png" class="example_partner" title="Tu restaurante" alt="Tu restaurante" />
               </v-col>
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <v-img src="/img/tu_restaurante.png" class="example_partner" title="Una persona" alt="Una persona" />
               </v-col>
             </v-row>
             <v-row class="mt-4">
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <v-img src="/img/tu_restaurante.png" class="example_partner" title="Una persona" alt="Una persona" />
               </v-col>
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <v-img src="/img/tu_restaurante.png" class="example_partner" title="Tu restaurante" alt="Tu restaurante" />
               </v-col>
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <v-img src="/img/tu_empresa_h_512.png" class="example_partner" title="Tu empresa" alt="Tu empresa" />
               </v-col>
-              <v-col cols="3">
+              <v-col cols="12" sm="3">
                 <v-img src="/img/una_persona.png" class="example_partner" title="Una persona" alt="Una persona" />
               </v-col>
             </v-row>
@@ -219,17 +219,19 @@
         </CtCard>
       </v-col>
     </v-row>
-    <v-row>
-      <v-spacer />
-      <v-col>
-        <br><br><br><br>
-        <CtBtn block type="empty" color="primary" class="pt-7 pb-7 px-12" to="/registro">
-          Empezar
-        </CtBtn>
-        <br><br>
-      </v-col>
-      <v-spacer />
-    </v-row>
+    <v-col cols="12">
+      <v-row dense>
+        <v-spacer />
+        <v-col>
+          <br><br><br><br>
+          <CtBtn block type="empty" color="primary" class="pt-7 pb-7 px-12" to="/registro">
+            Empezar
+          </CtBtn>
+          <br><br>
+        </v-col>
+        <v-spacer />
+      </v-row>
+    </v-col>
   </v-row>
 </template>
 

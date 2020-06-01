@@ -57,7 +57,7 @@
                 <v-btn
                   large
                   depressed
-                  color="blue"
+                  color="primary"
                   :value="false"
                 >
                   <v-icon>mdi-arrow-up</v-icon>
@@ -65,7 +65,7 @@
                 <v-btn
                   large
                   depressed
-                  color="blue"
+                  color="primary"
                   :value="true"
                 >
                   <v-icon>mdi-arrow-down</v-icon>
@@ -169,7 +169,7 @@
             <v-btn
               fab
               dark
-              color="blue darken-3"
+              color="primary darken-3"
               class="mr-1"
               @click="formerPage"
             >
@@ -178,7 +178,7 @@
             <v-btn
               fab
               dark
-              color="blue darken-3"
+              color="primary darken-3"
               class="ml-1"
               @click="nextPage"
             >
@@ -231,16 +231,16 @@
               <CtTextField type="number" append-icon="mdi-height" label="Margen" v-model="complement.margin"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Precio incluído" v-model="complement.include"/>
+              <v-checkbox label="Precio incluído" v-model="complement.include"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Solo se puede incluir una vez" v-model="complement.unique"/>
+              <v-checkbox label="Solo se puede incluir una vez" v-model="complement.unique"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Incluido por defecto" v-model="complement.by_default"/>
+              <v-checkbox label="Incluido por defecto" v-model="complement.by_default"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Está disponible" v-model="complement.is_available"/>
+              <v-checkbox label="Está disponible" v-model="complement.is_available"/>
             </v-col>
             <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
               <v-row v-for="(serverError, index) in serverMessage" :key="index">

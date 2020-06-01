@@ -57,7 +57,7 @@
                 <v-btn
                   large
                   depressed
-                  color="blue"
+                  color="primary"
                   :value="false"
                 >
                   <v-icon>mdi-arrow-up</v-icon>
@@ -65,7 +65,7 @@
                 <v-btn
                   large
                   depressed
-                  color="blue"
+                  color="primary"
                   :value="true"
                 >
                   <v-icon>mdi-arrow-down</v-icon>
@@ -169,7 +169,7 @@
             <v-btn
               fab
               dark
-              color="blue darken-3"
+              color="primary darken-3"
               class="mr-1"
               @click="formerPage"
             >
@@ -178,7 +178,7 @@
             <v-btn
               fab
               dark
-              color="blue darken-3"
+              color="primary darken-3"
               class="ml-1"
               @click="nextPage"
             >

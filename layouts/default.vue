@@ -63,17 +63,14 @@
             </v-list-item-content>
           </v-list-item>
         </template>
-        <v-list-item link>
-          <v-list-item-action @click="openCart()">
-            <CtIcon :icon="['fas', 'file-alt']" class="primary--text" />
-          </v-list-item-action>
-          <v-list-item-content @click="openCart()">
-            <v-list-item-title class="primary--text">
-              La carta
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
       </v-list>
+      <v-row dense>
+        <v-spacer />
+        <v-col cols="8">
+          <CtSelect :items="rates" item-text="description" item-value="id" label="Tarifa de productos" v-model="rate"/>
+        </v-col>
+        <v-spacer />
+      </v-row>
       <v-row dense>
         <v-col cols="12" id="qr_code">
           &nbsp;
@@ -87,6 +84,16 @@
           <v-list-item-content @click="downloadQr()">
             <v-list-item-title class="primary--text">
               Descargar QR
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link>
+          <v-list-item-action @click="openCart()">
+            <CtIcon :icon="['fas', 'file-alt']" class="primary--text" />
+          </v-list-item-action>
+          <v-list-item-content @click="openCart()">
+            <v-list-item-title class="primary--text">
+              La carta
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -180,7 +187,7 @@
         <v-row class="pt-12">
           <v-spacer />
           <v-col cols="3" sm="1">
-            <v-img src="img/ulises_logo_180.png" width="50px" title="Ulises" alt="Ulises" />
+            <v-img src="img/ulises_logo_180.png" title="Ulises" alt="Ulises" />
           </v-col>
           <v-spacer />
         </v-row>
@@ -203,7 +210,27 @@ export default {
     drawer: false,
     items: [
       { icon: ['fas', 'cube'], text: 'Productos', path: '/product' },
-      { icon: ['fas', 'align-justify'], text: 'Productos - Categorías', path: '/taxon' },
+      { icon: ['fas', 'align-justify'], text: 'Categorías', path: '/taxon' },
+    ],
+    rate: '0',
+
+    rates: [
+      {
+        description: 'Tarifa 1',
+        id: '0',
+      },
+      {
+        description: 'Tarifa 2',
+        id: '2',
+      },
+      {
+        description: 'Tarifa 3',
+        id: '3',
+      },
+      {
+        description: 'Tarifa 4',
+        id: '4',
+      },
     ],
   }),
 
@@ -213,30 +240,41 @@ export default {
     }
   },
 
-  mounted() {
-    const myCanvas = document.createElement('canvas')
-    myCanvas.id = 'qr_code_canvas'
-    document.getElementById('qr_code').appendChild(myCanvas)
+  watch: {
+    rate(newValue) {
+      this.generateQr('0000001', newValue)
+    }
+  },
 
-    QrCodeWithLogo.toCanvas({
-      canvas: myCanvas,
-      content: 'https://miolimpo.org',
-      width: 300,
-      logo: {
-        src: '/img/ulises_logo_180.png',
-        radius: 8
-      },
-      nodeQrCodeOptions: {
-        color: {
-          dark: '#ff9320',
-        }
-      },
-    })
+  mounted() {
+    this.generateQr('0000001', '0')
   },
 
   methods: {
+    generateQr(account, rate) {
+      const myCanvas = document.createElement('canvas')
+      myCanvas.id = 'qr_code_canvas'
+      document.getElementById('qr_code').innerHTML = ''
+      document.getElementById('qr_code').appendChild(myCanvas)
+
+      QrCodeWithLogo.toCanvas({
+        canvas: myCanvas,
+        content: 'https://ulises.miolimpo.org/carta/' + account + '/' + rate,
+        width: 300,
+        logo: {
+          src: '/img/ulises_logo_180.png',
+          radius: 8
+        },
+        nodeQrCodeOptions: {
+          color: {
+            dark: '#ff9320',
+          }
+        },
+      })
+    },
+
     openCart() {
-      var win = window.open('/carta', '_blank');
+      var win = window.open('/carta/0000001/' + this.rate, '_blank');
       win.focus();
     },
 

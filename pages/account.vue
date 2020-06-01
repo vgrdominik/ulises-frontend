@@ -23,6 +23,12 @@
         >
           <v-row dense>
             <v-col cols="12" class="mt-5">
+              Actualmente y hasta la próxima actualización cualquier cambio en la cuenta de usuario debe hacerse vía correo electrónico a iam@valentigamez.com.
+            </v-col>
+          </v-row>
+        </v-container>
+          <!-- <v-row dense>
+            <v-col cols="12" class="mt-5">
               <CtTextField append-icon="mdi-fingerprint" label="Nombre" v-model="user.description"/>
             </v-col>
             <v-col cols="12" class="mt-5">
@@ -42,16 +48,49 @@
           <CtBtn @click="save()" type="primary" block>
             Guardar
           </CtBtn>
-        </v-card-actions>
+        </v-card-actions>-->
       </v-tab-item>
       <v-tab-item key="Password">
-        Modificar password
+        <v-container
+          fluid
+          id="scroll-target"
+          style="max-height: 400px"
+          class="overflow-y-auto"
+        >
+          <v-row dense>
+            <v-col cols="12" class="mt-5">
+              Actualmente y hasta la próxima actualización cualquier cambio en la cuenta de usuario debe hacerse vía correo electrónico a iam@valentigamez.com.
+            </v-col>
+          </v-row>
+        </v-container>
       </v-tab-item>
       <v-tab-item key="Suscripción">
-        Tu suscripción actual
+        <v-container
+          fluid
+          id="scroll-target"
+          style="max-height: 400px"
+          class="overflow-y-auto"
+        >
+          <v-row dense>
+            <v-col cols="12" class="mt-5">
+              Actualmente y hasta la próxima actualización cualquier cambio en la cuenta de usuario debe hacerse vía correo electrónico a iam@valentigamez.com.
+            </v-col>
+          </v-row>
+        </v-container>
       </v-tab-item>
       <v-tab-item key="Eliminar suscripción">
-        Texto eliminar suscripción
+        <v-container
+          fluid
+          id="scroll-target"
+          style="max-height: 400px"
+          class="overflow-y-auto"
+        >
+          <v-row dense>
+            <v-col cols="12" class="mt-5">
+              Actualmente y hasta la próxima actualización cualquier cambio en la cuenta de usuario debe hacerse vía correo electrónico a iam@valentigamez.com.
+            </v-col>
+          </v-row>
+        </v-container>
       </v-tab-item>
     </v-tabs-items>
   </CtCard>

@@ -43,7 +43,7 @@
                 <v-list-item-content>
                   <v-list-item-title>
                     <div v-html="product.description" class="float-left" />
-                    <div v-html="product.retail_price + ' €'" class="float-right" />
+                    <div v-if="product['retail_price' + rate] !== 0" v-html="product['retail_price' + rate] + ' €'" class="float-right" />
                   </v-list-item-title>
                   <v-list-item-subtitle>
                     <div v-html="product.details" />
@@ -72,12 +72,20 @@ import { mapActions } from 'vuex'
 export default {
   layout: 'cart',
 
+  validate ({ params }) {
+    // Must be a number
+    return /^\d+$/.test(params.rate) && /^\d+$/.test(params.account)
+  },
+
   data: () => ({
     vendor: null,
     products: [],
     taxons: [],
     complements: [],
     complementTaxons: [],
+
+    rate: '',
+    account: null,
 
     currentProduct: null,
 
@@ -153,9 +161,17 @@ export default {
     this.fetchComplementTaxons()
 
     this.setShowFooter(false)
+
+    this.setRouteParams()
   },
 
   methods: {
+    setRouteParams() {
+      if (this.$nuxt._route.params.rate !== '0') {
+        this.rate = this.$nuxt._route.params.rate
+      }
+      this.account = this.$nuxt._route.params.account
+    },
 
     initVendor(vendors) {
       if (vendors[0] !== undefined) {

@@ -2,7 +2,7 @@
   <CtCard title="Registro" width="300" class="mx-auto">
     <v-row dense>
       <v-col cols="12" class="mt-5">
-        <CtTextField append-icon="mdi-account" label="Nombre" v-model="signUpData.name"/>
+        <CtTextField append-icon="mdi-account" label="Nombre público" v-model="signUpData.name"/>
       </v-col>
       <v-col cols="12">
         <CtTextField append-icon="mdi-email" label="Email" v-model="signUpData.email"/>

@@ -21,6 +21,9 @@ a {
   z-index: 20;
 }
 
+#partners .v-image .v-responsive__content {
+  width: 100% !important;
+}
 .example_partner {
   filter: contrast(50%);
 }

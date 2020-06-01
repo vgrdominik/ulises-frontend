@@ -57,7 +57,7 @@
                 <v-btn
                   large
                   depressed
-                  color="blue"
+                  color="primary"
                   :value="false"
                 >
                   <v-icon>mdi-arrow-up</v-icon>
@@ -65,7 +65,7 @@
                 <v-btn
                   large
                   depressed
-                  color="blue"
+                  color="primary"
                   :value="true"
                 >
                   <v-icon>mdi-arrow-down</v-icon>
@@ -120,6 +120,7 @@
                 <v-col
                   v-for="(key, index) in filteredKeys"
                   :key="index"
+                  class="text-center"
                 >
                   <span :class="{ 'primary--text': sortBy === key }" v-html="productItem[key.key]" />
                 </v-col>
@@ -169,7 +170,7 @@
             <v-btn
               fab
               dark
-              color="blue darken-3"
+              color="primary darken-3"
               class="mr-1"
               @click="formerPage"
             >
@@ -178,7 +179,7 @@
             <v-btn
               fab
               dark
-              color="blue darken-3"
+              color="primary darken-3"
               class="ml-1"
               @click="nextPage"
             >
@@ -201,70 +202,50 @@
         >
           <v-row dense>
             <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Nombre" v-model="product.description"/>
+              <CtTextField append-icon="mdi-format-text-variant" label="Nombre" v-model="product.description"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Nombre corto" v-model="product.short_description"/>
+              <CtTextField append-icon="mdi-tag-text-outline" label="Nombre corto" v-model="product.short_description"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtTextarea append-icon="mdi-fingerprint" label="Detalles" v-model="product.details"/>
+              <CtTextarea append-icon="mdi-text" label="Detalles" v-model="product.details"/>
             </v-col>
             <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Orden" v-model="product.order"/>
+              <CtTextField append-icon="mdi-swap-vertical" label="Orden" v-model="product.order"/>
             </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtSelect :items="vendors" item-text="description" item-value="id" label="Vendedor" v-model="product.vendor_id"/>
-            </v-col>
+            <input type="hidden" v-model="product.vendor_id"/>
             <v-col cols="12" class="mt-5">
               <CtSelect :items="taxons" item-text="description" item-value="id" label="Categoría" v-model="product.taxon_id"/>
             </v-col>
             <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="PVP" v-model="product.retail_price"/>
+              <CtTextField append-icon="mdi-currency-eur" label="PVP Tarifa 1" v-model="product.retail_price"/>
             </v-col>
             <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="PVP Tarifa 2" v-model="product.retail_price2"/>
+              <CtTextField append-icon="mdi-currency-eur" label="PVP Tarifa 2" v-model="product.retail_price2"/>
             </v-col>
             <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="PVP Tarifa 3" v-model="product.retail_price3"/>
+              <CtTextField append-icon="mdi-currency-eur" label="PVP Tarifa 3" v-model="product.retail_price3"/>
             </v-col>
             <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="PVP Tarifa 4" v-model="product.retail_price4"/>
+              <CtTextField append-icon="mdi-currency-eur" label="PVP Tarifa 4" v-model="product.retail_price4"/>
             </v-col>
+            <input type="hidden" v-model="product.handling_fee"/>
+            <input type="hidden" v-model="product.product_cost"/>
+            <input type="hidden" v-model="product.margin"/>
             <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="Tasa de tramitación" v-model="product.handling_fee"/>
+              <CtTextField append-icon="mdi-office-building" label="% IVA" v-model="product.iva"/>
             </v-col>
-            <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="Coste" v-model="product.product_cost"/>
-            </v-col>
-            <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="Margen" v-model="product.margin"/>
-            </v-col>
-            <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="IVA" v-model="product.iva"/>
-            </v-col>
+            <input type="hidden" v-model="product.sku"/>
+            <input type="hidden" v-model="product.barcode"/>
+            <input type="hidden" v-model="product.inventory"/>
+            <input type="hidden" v-model="product.quantity_inventory"/>
             <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Referencia" v-model="product.sku"/>
+              <CtTextField append-icon="mdi-file-image" label="Foto" v-model="product.photo"/>
             </v-col>
+            <input type="hidden" v-model="product.compulsory_complements"/>
+            <input type="hidden" v-model="product.send"/>
             <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Código de barras" v-model="product.barcode"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Inventario habilitado" v-model="product.inventory"/>
-            </v-col>
-            <v-col cols="12">
-              <CtTextField type="number" append-icon="mdi-height" label="Cantidad inventario" v-model="product.quantity_inventory"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-fingerprint" label="Foto" v-model="product.photo"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Complementos obligatorios" v-model="product.compulsory_complements"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Envío a dispositivos habilitado" v-model="product.send"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtCheckbox label="Está disponible" v-model="product.is_available"/>
+              <v-checkbox label="Está disponible" v-model="product.is_available"/>
             </v-col>
             <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
               <v-row v-for="(serverError, index) in serverMessage" :key="index">
@@ -301,7 +282,8 @@ export default {
         details: '',
         order: '',
         creator_id: null,
-        vendor_id: null,
+        //vendor_id: null,
+        vendor_id: 1,
         taxon_id: null,
         barcode: '',
         sku: '',
@@ -318,7 +300,7 @@ export default {
         margin: 0,
         compulsory_complements: false,
         send: false,
-        is_available: false,
+        is_available: true,
       },
       productId: null,
       formTitle: '',
@@ -339,9 +321,9 @@ export default {
           key: 'description',
         },
         {
-          description: 'Cantidad inventario',
+          description: 'Categoría',
           hint: null,
-          key: 'quantity_inventory',
+          key: 'taxon_name',
         },
         {
           description: 'PVP',
@@ -382,7 +364,7 @@ export default {
       this.product.short_description = ''
       this.product.details = ''
       this.product.order = ''
-      this.product.vendor_id = null
+      this.product.vendor_id = 1
       this.product.taxon_id = null
       this.product.barcode = ''
       this.product.sku = ''
@@ -399,7 +381,7 @@ export default {
       this.product.margin = 0
       this.product.compulsory_complements = false
       this.product.send = false
-      this.product.is_available = false
+      this.product.is_available = true
     },
 
     closeProduct() {

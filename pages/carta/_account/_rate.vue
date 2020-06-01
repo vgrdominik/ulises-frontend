@@ -6,7 +6,7 @@
     <v-col cols="12" class="mt-12">
       <v-row>
         <v-spacer />
-        <CtBtn type="outlined" large color="white" to="/carta-productos">
+        <CtBtn type="outlined" large color="white" :to="'/carta/' + account + '/productos/' + rate">
           La carta
         </CtBtn>
         <v-spacer />
@@ -21,16 +21,30 @@ import { mapActions } from 'vuex'
 export default {
   layout: 'cart',
 
+  validate ({ params }) {
+    // Must be a number
+    return /^\d+$/.test(params.rate) && /^\d+$/.test(params.account)
+  },
+
   data: () => ({
     vendor: null,
+
+    rate: '',
+    account: null,
   }),
 
   mounted() {
     this.fetch()
     this.setShowFooter(true)
+
+    this.setRouteParams()
   },
 
   methods: {
+    setRouteParams() {
+      this.rate = this.$nuxt._route.params.rate
+      this.account = this.$nuxt._route.params.account
+    },
 
     initVendor(vendors) {
       if (vendors[0] !== undefined) {

@@ -9,7 +9,7 @@
     <v-footer class="primary white--text" v-if="$store.state.generic.showFooter === true">
       <v-row class="pt-12" @click="$router.push({ path: '/' })">
         <v-col cols="6">
-          <v-img src="img/ulises_logo_400_white.png" class="float-right" width="100px" title="Ulises" alt="Ulises" />
+          <v-img src="/img/ulises_logo_400_white.png" class="float-right" width="100px" title="Ulises" alt="Ulises" />
         </v-col>
         <v-col cols="6">
           <span class="body-1">

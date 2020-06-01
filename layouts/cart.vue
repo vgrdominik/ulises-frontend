@@ -1,13 +1,13 @@
 <template>
   <v-app id="inspire">
     <v-content class="primary white--text">
-      <v-container fill-height class="main-container-cart">
+      <v-container fill-height class="main-container-cart pa-0">
         <nuxt />
       </v-container>
     </v-content>
 
-    <v-footer class="primary white--text">
-      <v-row class="pt-12">
+    <v-footer class="primary white--text" v-if="$store.state.generic.showFooter === true">
+      <v-row class="pt-12" @click="$router.push({ path: '/' })">
         <v-col cols="6">
           <v-img src="img/ulises_logo_400_white.png" class="float-right" width="100px" title="Ulises" alt="Ulises" />
         </v-col>

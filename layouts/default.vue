@@ -187,7 +187,7 @@
         <v-row class="pt-12">
           <v-spacer />
           <v-col cols="3" sm="1">
-            <v-img src="img/ulises_logo_180.png" title="Ulises" alt="Ulises" />
+            <v-img src="/img/ulises_logo_180.png" title="Ulises" alt="Ulises" />
           </v-col>
           <v-spacer />
         </v-row>

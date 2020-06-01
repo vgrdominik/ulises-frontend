@@ -89,7 +89,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    baseURL:  'http://127.0.0.1:8000',//'{BASE_URL_OF API}/',
+    baseURL:  'https://ulises.miolimpo.org',//'{BASE_URL_OF API}/',
     credentials: true
   },
 

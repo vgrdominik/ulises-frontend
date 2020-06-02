@@ -371,7 +371,7 @@ export default {
 
   mounted() {
     this.fetch()
-    this.vendor.creator_id = this.$store.state.user.user.id
+    this.vendor.creator_id = 1
   },
 
   methods: {

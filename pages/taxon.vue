@@ -309,7 +309,7 @@ export default {
     this.fetch()
     this.fetchChannels()
     this.fetchTaxons()
-    this.taxon.creator_id = this.$store.state.user.user.id
+    this.taxon.creator_id = 1
   },
 
   methods: {

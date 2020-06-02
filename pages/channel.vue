@@ -284,7 +284,7 @@ export default {
 
   mounted() {
     this.fetch()
-    this.channel.creator_id = this.$store.state.user.user.id
+    this.channel.creator_id = 1
   },
 
   methods: {

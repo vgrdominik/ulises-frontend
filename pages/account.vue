@@ -138,7 +138,7 @@ export default {
 
   mounted() {
     this.updateUser()
-    this.profile.creator_id = this.$store.state.user.user.id
+    this.profile.creator_id = 1
   },
 
   methods: {

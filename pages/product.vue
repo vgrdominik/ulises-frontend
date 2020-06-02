@@ -352,7 +352,7 @@ export default {
     this.fetch()
     this.fetchVendors()
     this.fetchTaxons()
-    this.product.creator_id = this.$store.state.user.user.id
+    this.product.creator_id = 1
   },
 
   methods: {

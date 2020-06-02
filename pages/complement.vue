@@ -338,7 +338,7 @@ export default {
     this.fetch()
     this.fetchProducts()
     this.fetchComplementTaxons()
-    this.complement.creator_id = this.$store.state.user.user.id
+    this.complement.creator_id = 1
   },
 
   methods: {

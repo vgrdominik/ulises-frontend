@@ -28,11 +28,16 @@ En producción añadir .htaccess en la carpeta dist:
 ```
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+
+    # ssl
+    RewriteCond %{SERVER_PORT} 80
+    RewriteRule ^(.*)$ https://ulises-api.miolimpo.org/$1 [R,L]
+
+    RewriteBase /
+    RewriteRule ^index\.html$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
 </IfModule>
 ``` 
 

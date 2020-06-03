@@ -282,7 +282,7 @@ export default {
     },
 
     openCart() {
-      var win = window.open('/carta/' + this.userId() + '/' + this.rate, '_blank');
+      var win = window.open('/carta/' + this.userId + '/' + this.rate, '_blank');
       win.focus();
     },
 

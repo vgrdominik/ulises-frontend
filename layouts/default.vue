@@ -237,17 +237,25 @@ export default {
   computed: {
     user () {
       return this.$store.state.user.user
+    },
+
+    userId () {
+      if (this.$store.state.user.user && this.$store.state.user.user.id) {
+        return this.$store.state.user.user.id
+      }
+
+      return 1
     }
   },
 
   watch: {
     rate(newValue) {
-      this.generateQr('0000001', newValue)
+      this.generateQr(this.userId, newValue)
     }
   },
 
   mounted() {
-    this.generateQr('0000001', '0')
+    this.generateQr(this.userId, '0')
   },
 
   methods: {

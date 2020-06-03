@@ -154,6 +154,7 @@ export default {
   },
 
   mounted() {
+    this.setRouteParams()
     this.fetchVendor()
     this.fetchProducts()
     this.fetchTaxons()
@@ -161,8 +162,6 @@ export default {
     this.fetchComplementTaxons()
 
     this.setShowFooter(false)
-
-    this.setRouteParams()
   },
 
   methods: {
@@ -190,31 +189,31 @@ export default {
     },
 
     fetchVendor() {
-      this.$axios.get('/api/vendorSummary')
+      this.$axios.get('/api/vendorSummary?account_id=' + this.account)
         .then((response) => (response.data) ? this.initVendor(response.data) : '')
         .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchProducts() {
-      this.$axios.get('/api/productSummary')
+      this.$axios.get('/api/productSummary?account_id=' + this.account)
         .then((response) => (response.data) ? this.products = response.data : '')
         .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchTaxons() {
-      this.$axios.get('/api/taxonSummary')
+      this.$axios.get('/api/taxonSummary?account_id=' + this.account)
         .then((response) => (response.data) ? this.initTaxons(response.data) : '')
         .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchComplements() {
-      this.$axios.get('/api/complementSummary')
+      this.$axios.get('/api/complementSummary?account_id=' + this.account)
         .then((response) => (response.data) ? this.complements = response.data : '')
         .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     fetchComplementTaxons() {
-      this.$axios.get('/api/complementTaxonSummary')
+      this.$axios.get('/api/complementTaxonSummary?account_id=' + this.account)
         .then((response) => (response.data) ? this.complementTaxons = response.data : '')
         .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },

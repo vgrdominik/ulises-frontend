@@ -34,10 +34,10 @@ export default {
   }),
 
   mounted() {
+    this.setRouteParams()
+
     this.fetch()
     this.setShowFooter(true)
-
-    this.setRouteParams()
   },
 
   methods: {
@@ -53,7 +53,7 @@ export default {
     },
 
     fetch() {
-      this.$axios.get('/api/vendorSummary')
+      this.$axios.get('/api/vendorSummary?account_id=' + this.account)
         .then((response) => (response.data) ? this.initVendor(response.data) : '')
         .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },

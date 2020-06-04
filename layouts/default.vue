@@ -251,7 +251,11 @@ export default {
   watch: {
     rate(newValue) {
       this.generateQr(this.userId, newValue)
-    }
+    },
+
+    userId(newValue) {
+      this.generateQr(this.userId, '0')
+    },
   },
 
   mounted() {

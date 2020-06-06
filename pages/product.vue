@@ -207,8 +207,139 @@
             <v-col cols="12" class="mt-5">
               <CtTextField append-icon="mdi-tag-text-outline" label="Nombre corto" v-model="product.short_description"/>
             </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtTextarea append-icon="mdi-text" label="Detalles" v-model="product.details"/>
+            <v-col cols="12" class="mt-5" id="editor-texto">
+              Detalles<br/>
+              <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+                <div class="menubar">
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.bold() }"
+                    @click="commands.bold"
+                  >
+                    <CtIcon :icon="['fas', 'bold']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.italic() }"
+                    @click="commands.italic"
+                  >
+                    <CtIcon :icon="['fas', 'italic']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.strike() }"
+                    @click="commands.strike"
+                  >
+                    <CtIcon :icon="['fas', 'strike']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.underline() }"
+                    @click="commands.underline"
+                  >
+                    <CtIcon :icon="['fas', 'underline']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.code() }"
+                    @click="commands.code"
+                  >
+                    <CtIcon :icon="['fas', 'code']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.paragraph() }"
+                    @click="commands.paragraph"
+                  >
+                    <CtIcon :icon="['fas', 'paragraph']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+                    @click="commands.heading({ level: 1 })"
+                  >
+                    H1
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+                    @click="commands.heading({ level: 2 })"
+                  >
+                    H2
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+                    @click="commands.heading({ level: 3 })"
+                  >
+                    H3
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.bullet_list() }"
+                    @click="commands.bullet_list"
+                  >
+                    <CtIcon :icon="['fas', 'ul']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.ordered_list() }"
+                    @click="commands.ordered_list"
+                  >
+                    <CtIcon :icon="['fas', 'ol']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.blockquote() }"
+                    @click="commands.blockquote"
+                  >
+                    <CtIcon :icon="['fas', 'quote']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    :class="{ 'is-active': isActive.code_block() }"
+                    @click="commands.code_block"
+                  >
+                    <CtIcon :icon="['fas', 'code']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    @click="commands.horizontal_rule"
+                  >
+                    <CtIcon :icon="['fas', 'hr']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    @click="commands.undo"
+                  >
+                    <CtIcon :icon="['fas', 'undo']" />
+                  </button>
+
+                  <button
+                    class="menubar__button"
+                    @click="commands.redo"
+                  >
+                    <CtIcon :icon="['fas', 'redo']" />
+                  </button>
+
+                </div>
+              </editor-menu-bar>
+              <editor-content class="editor__content" :editor="editor"  />
             </v-col>
             <v-col cols="12" class="mt-5">
               <CtTextField append-icon="mdi-swap-vertical" label="Orden" v-model="product.order"/>
@@ -268,11 +399,39 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+import {
+  Blockquote,
+  CodeBlock,
+  HardBreak,
+  Heading,
+  HorizontalRule,
+  OrderedList,
+  BulletList,
+  ListItem,
+  TodoItem,
+  TodoList,
+  Bold,
+  Code,
+  Italic,
+  Link,
+  Strike,
+  Underline,
+  History,
+} from 'tiptap-extensions'
+
 export default {
   middleware: 'authenticated',
 
+  components: {
+    EditorContent,
+    EditorMenuBar,
+  },
+
   data() {
     return {
+      editor: null,
+
       products: [],
       vendors: [],
       taxons: [],
@@ -353,6 +512,30 @@ export default {
     this.fetchVendors()
     this.fetchTaxons()
     this.product.creator_id = 1
+    this.product.details = '<p>Descripción del producto</p>'
+
+    this.editor = new Editor({
+      extensions: [
+        new Blockquote(),
+        new BulletList(),
+        new CodeBlock(),
+        new HardBreak(),
+        new Heading({ levels: [1, 2, 3] }),
+        new HorizontalRule(),
+        new ListItem(),
+        new OrderedList(),
+        new TodoItem(),
+        new TodoList(),
+        new Link(),
+        new Bold(),
+        new Code(),
+        new Italic(),
+        new Strike(),
+        new Underline(),
+        new History(),
+      ],
+      content: this.product.details,
+    })
   },
 
   methods: {
@@ -362,7 +545,8 @@ export default {
       this.productId = null
       this.product.description = ''
       this.product.short_description = ''
-      this.product.details = ''
+      this.product.details = '<p>Descripción del producto</p>'
+      this.editor.setContent(this.product.details)
       this.product.order = ''
       this.product.vendor_id = 1
       this.product.taxon_id = null
@@ -403,6 +587,8 @@ export default {
       this.product.creator_id = product.creator.id
       this.product.vendor_id = product.vendor.id
       this.product.taxon_id = product.taxon.id
+
+      this.editor.setContent(this.product.details)
     },
 
     updateProduct(productId) {
@@ -428,6 +614,8 @@ export default {
     },
 
     save() {
+      this.product.details = this.editor.getHTML()
+
       if (this.productId === 0) {
         this.$axios.post('/api/product', this.product)
           .then(() => this.postSave())
@@ -476,6 +664,15 @@ export default {
     ...mapActions({
       setServerMessage: 'serverMessage/setServerMessage',
     }),
-  }
+  },
+
+  beforeDestroy() {
+    this.editor.destroy()
+  },
 }
 </script>
+<style>
+  .editor__content {
+    border: 1px solid black;
+  }
+</style>

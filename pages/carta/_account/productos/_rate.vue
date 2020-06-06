@@ -38,6 +38,7 @@
               <v-divider />
               <v-list-item
                 :key="product.id"
+                :to="'/carta/' + account + '/producto/0/' + product.id"
                 @click=""
               >
                 <v-list-item-content>

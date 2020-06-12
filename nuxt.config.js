@@ -82,6 +82,11 @@ export default {
           }
         ]
       },
+    ],
+    [
+      '@nuxtjs/google-analytics', {
+        id: 'UA-168767048-1'
+      }
     ]
   ],
   /*

@@ -1,7 +1,9 @@
 <template>
   <CtCard title="Categorías" width="100%" class="mx-auto">
     <template v-slot:rightTitleContent>
-      <CtBtn type="icon" color="white" :icon="['fas', 'plus']" @click="addTaxon" />
+      <CtBtn color="white" :icon="['fas', 'plus']" @click="addTaxon">
+        Añadir
+      </CtBtn>
     </template>
     <v-container fluid>
       <v-row dense>
@@ -22,18 +24,13 @@
         hide-default-footer
       >
         <template v-slot:header>
-          <v-toolbar
-            dark
-            color="primary darken-3"
-            class="mb-1"
-          >
+          <v-row class="d-flex">
             <v-text-field
               v-model="search"
-              clearable
               flat
-              solo-inverted
+              outlined
+              dense
               hide-details
-              prepend-inner-icon="mdi-search"
               label="Search"
             ></v-text-field>
             <template v-if="$vuetify.breakpoint.mdAndUp">
@@ -41,12 +38,12 @@
               <v-select
                 v-model="sortBy"
                 flat
-                solo-inverted
                 hide-details
+                outlined
+                dense
                 :items="keys"
                 item-text="description"
                 item-value="key"
-                prepend-inner-icon="mdi-search"
                 label="Ordenar por"
               ></v-select>
               <v-spacer></v-spacer>
@@ -60,7 +57,7 @@
                   color="primary"
                   :value="false"
                 >
-                  <v-icon>mdi-arrow-up</v-icon>
+                  <v-icon>mdi-arrow-down</v-icon>
                 </v-btn>
                 <v-btn
                   large
@@ -68,17 +65,16 @@
                   color="primary"
                   :value="true"
                 >
-                  <v-icon>mdi-arrow-down</v-icon>
+                  <v-icon>mdi-arrow-up</v-icon>
                 </v-btn>
               </v-btn-toggle>
             </template>
-          </v-toolbar>
+          </v-row>
           <v-row dense>
             <v-col
               cols="12"
               class="mt-2">
               <v-row dense>
-                <v-col cols="1" />
                 <v-col
                   v-for="(key, index) in filteredKeys"
                   :key="index"
@@ -101,6 +97,7 @@
                   </template>
                 </v-col>
                 <v-col cols="1" />
+                <v-col cols="1" />
               </v-row>
             </v-col>
           </v-row>
@@ -114,18 +111,28 @@
               cols="12"
               class="mt-2">
               <v-row dense>
-                <v-col cols="1">
-                  <CtBtn type="icon" color="warning" :icon="['fas', 'trash']" @click="removeTaxon(taxonItem.id)" />
-                </v-col>
                 <v-col
                   v-for="(key, index) in filteredKeys"
                   :key="index"
                   class="text-center"
                 >
-                  <span :class="{ 'primary--text': sortBy === key }" v-html="taxonItem[key.key]" />
+                  <template v-if="key.key === 'descriptionWithParent' && taxonItem.parent_taxon_id">
+                    <template v-if="taxonEdition[taxonItem.index] && taxonEdition[taxonItem.index].isEditing">
+                      <CtSelect :items="taxons" item-text="description" item-value="id" label="Categoría padre" v-model="taxonItem.parent_taxon_id" @input="updateTaxonFromList(taxonItem.index)" />
+                      <CtTextField @input="updateTaxonFromList(taxonItem.index)" :label="key.description" v-model="taxonItem.description"/>
+                    </template>
+                    <span v-else :class="{ 'primary--text': sortBy === key }" v-html="taxonItem.descriptionWithParent" />
+                  </template>
+                  <template v-else>
+                    <CtTextField v-if="taxonEdition[taxonItem.index] && taxonEdition[taxonItem.index].isEditing" @input="updateTaxonFromList(taxonItem.index)" :label="key.description" v-model="taxonItem[key.key]"/>
+                    <span v-else :class="{ 'primary--text': sortBy === key }" v-html="taxonItem[key.key]" />
+                  </template>
                 </v-col>
                 <v-col cols="1" class="text-right">
-                  <CtBtn type="icon" color="primary" :icon="['fas', 'edit']" @click="updateTaxon(taxonItem.id)" />
+                  <CtBtn type="icon" color="primary" :icon="['fas', 'edit']" @click="taxonEdition[taxonItem.index].isEditing = ! taxonEdition[taxonItem.index].isEditing" />
+                </v-col>
+                <v-col cols="1">
+                  <CtBtn type="icon" color="error" :icon="['fas', 'trash']" @click="removeTaxon(taxonItem.id)" />
                 </v-col>
               </v-row>
             </v-col>
@@ -133,6 +140,31 @@
         </template>
 
         <template v-slot:footer>
+          <v-row dense>
+            <v-col
+              v-if="form"
+              cols="12"
+              class="mt-2">
+              <v-row dense>
+                <v-col class="text-center">
+                  <CtSelect :items="taxons" item-text="description" item-value="id" label="Categoría padre" v-model="taxon.parent_taxon_id" @keyup.enter="save(null, taxon)" />
+                </v-col>
+                <v-col
+                  v-for="(key, index) in filteredKeys"
+                  :key="index"
+                  class="text-center"
+                >
+                  <template v-if="key.key === 'descriptionWithParent'">
+                    <CtTextField :label="key.description" v-model="taxon.description" @keyup.enter="save(null, taxon)" />
+                  </template>
+                  <CtTextField v-else :label="key.description" v-model="taxon[key.key]" @keyup.enter="save(null, taxon)" />
+                </v-col>
+                <v-col cols="2" class="text-right">
+                  <CtBtn type="icon" color="primary" :icon="['fas', 'save']" @click="save(null, taxon)" />
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
           <v-row class="mt-2" align="center" justify="center">
             <span class="grey--text">Items por página</span>
             <v-menu offset-y>
@@ -189,54 +221,6 @@
         </template>
       </v-data-iterator>
     </v-container>
-    <CtDialog v-model="form" :title="formTitle" width="500" class="mx-auto">
-      <template v-slot:rightTitleContent>
-        <CtBtn type="icon" color="white" :icon="['fas', 'times']" @click="closeTaxon" />
-      </template>
-      <v-card-text>
-        <v-container
-          fluid
-          id="scroll-target"
-          style="max-height: 400px"
-          class="overflow-y-auto"
-        >
-          <v-row dense>
-            <input type="hidden" v-model="taxon.channel_id"/>
-            <input type="hidden" v-model="taxon.parent_taxon_id"/>
-            <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-format-text-variant" label="Nombre" v-model="taxon.description"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-tag-text-outline" label="Nombre corto" v-model="taxon.short_description"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtTextarea append-icon="mdi-text" label="Detalles" v-model="taxon.details"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-swap-vertical" label="Orden" v-model="taxon.order"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <CtTextField append-icon="mdi-file-image" label="Url de la foto" v-model="taxon.photo"/>
-            </v-col>
-            <v-col cols="12" class="mt-5">
-              <v-checkbox label="Está disponible" v-model="taxon.is_available"/>
-            </v-col>
-            <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
-              <v-row v-for="(serverError, index) in serverMessage" :key="index">
-                <v-col cols="12" v-html="serverError" />
-              </v-row>
-            </v-col>
-            <v-col cols="12" v-else-if="serverMessage" v-html="serverMessage" class="error--text" />
-          </v-row>
-        </v-container>
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-actions>
-        <CtBtn @click="save()" type="primary" block>
-          Guardar
-        </CtBtn>
-      </v-card-actions>
-    </CtDialog>
   </CtCard>
 </template>
 
@@ -250,22 +234,15 @@ export default {
   data() {
     return {
       taxons: [],
-      taxonsToFrom: [],
-      channelsToFrom: [],
+      taxonEdition: [],
       taxon: {
         description: '',
-        short_description: '',
-        details: '',
-        order: '',
+        order: '1',
         photo: '',
-        creator_id: null,
-        //channel_id: null,
-        channel_id: 1,
+        creator_id: '1',
         parent_taxon_id: null,
         is_available: true,
       },
-      taxonId: null,
-      formTitle: '',
       form: false,
 
       // DataIterator
@@ -280,10 +257,10 @@ export default {
         {
           description: 'Descripción',
           hint: null,
-          key: 'description',
+          key: 'descriptionWithParent',
         },
         {
-          description: 'Orden',
+          description: 'Order',
           hint: null,
           key: 'order',
         },
@@ -307,52 +284,17 @@ export default {
 
   mounted() {
     this.fetch()
-    this.fetchChannels()
-    this.fetchTaxons()
-    this.taxon.creator_id = 1
+  },
+
+  destroyed() {
+    for (let i = 0; i < this.taxonEdition.length; i++) {
+      this.taxonEdition[i].taxonNextEditionTimeFunction = null
+    }
   },
 
   methods: {
-    resetTaxonData() {
-      this.form = false
-      this.formTitle = ''
-      this.taxonId = null
-      this.taxon.description = ''
-      this.taxon.short_description = ''
-      this.taxon.details = ''
-      this.taxon.order = ''
-      this.taxon.photo = ''
-      //this.taxon.channel_id = null
-      this.taxon.channel_id = 1
-      this.taxon.product_id = null
-      this.taxon.parent_taxon_id = null
-    },
-
-    closeTaxon() {
-      this.resetTaxonData()
-    },
-
     addTaxon() {
-      this.resetTaxonData()
-      this.formTitle = 'Añadir categoría'
       this.form = true
-      this.taxonId = 0
-    },
-
-    initUpdateTaxon(taxon) {
-      this.formTitle = 'Modificar categoría'
-      this.form = true
-      this.taxonId = taxon.id
-      this.taxon = taxon
-      this.taxon.creator_id = taxon.creator.id
-      this.taxon.channel_id = taxon.channel.id
-      this.taxon.parent_taxon_id = taxon.parent_taxon.id
-    },
-
-    updateTaxon(taxonId) {
-      this.$axios.get('/api/taxon/' + taxonId)
-        .then((response) => (response.data) ? this.initUpdateTaxon(response.data) : '')
-        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
     removeTaxon(taxonId) {
@@ -366,44 +308,91 @@ export default {
       return
     },
 
-    postSave() {
-      this.fetch()
-      this.closeTaxon()
+    updateTaxonFromList(taxonKey) {
+      if (this.taxonEdition[taxonKey].taxonNextEditionTime) {
+        this.$nextTick(() => {
+           this.save(taxonKey, this.taxons[taxonKey])
+        })
+
+        this.taxonEdition[taxonKey].taxonNextEditionTime = false
+        this.taxonEdition[taxonKey].taxonNextEditionTimeFunction = setTimeout(() => {
+          this.taxonEdition[taxonKey].taxonNextEditionTime = true
+          if (this.taxonEdition[taxonKey].taxonNextEditionTimeQueued) {
+            this.taxonEdition[taxonKey].taxonNextEditionTimeQueued = false
+            this.updateTaxonFromList(taxonKey)
+          }
+        }, 2000)
+      } else {
+        this.taxonEdition[taxonKey].taxonNextEditionTimeQueued = true
+      }
     },
 
-    save() {
-      if (this.taxonId === 0) {
-        this.$axios.post('/api/taxon', this.taxon)
-          .then(() => this.postSave())
+    save(taxonItemIndex, taxon) {
+      if (taxonItemIndex !== null) {
+        this.$axios.put('/api/taxon/' + this.taxons[taxonItemIndex].id, taxon)
+          .then(() => {})
           .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
         return
       }
-      if (this.taxonId !== null) {
-        this.$axios.put('/api/taxon/' + this.taxonId, this.taxon)
-          .then(() => this.postSave())
-          .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
-        return
-      }
+
+      this.$axios.post('/api/taxon', taxon)
+        .then(() => {
+          this.fetch()
+
+          this.taxon.description = ''
+          this.taxon.order = '1'
+          this.taxon.photo = ''
+          this.taxon.creator_id = '1'
+          this.taxon.parent_taxon_id = null
+          this.taxon.is_available = true
+
+          this.form = false
+        })
+        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
 
       return
     },
 
     fetch() {
       this.$axios.get('/api/taxon')
-        .then((response) => (response.data) ? this.taxons = response.data : '')
+        .then((response) => {
+          this.taxons = []
+          this.taxonEdition = []
+
+          for (let i = 0; i < response.data.length; i++) {
+            this.taxons.push(response.data[i])
+            this.taxons[i].creator_id = this.taxons[i].creator.id
+            this.taxons[i].parent_taxon_id = (this.taxons[i].parent_taxon) ? this.taxons[i].parent_taxon.id : null
+            this.taxons[i].index = i
+
+            this.taxonEdition.push({
+              id: this.taxons[i].id,
+              index: i,
+              isEditing: false,
+              taxonNextEditionTime: true,
+              taxonNextEditionTimeQueued: false,
+              taxonNextEditionTimeFunction: null,
+            })
+          }
+          for (let i = 0; i < this.taxons.length; i++) {
+            this.taxons[i].descriptionWithParent = (this.taxons[i].parent_taxon) ? this.getTaxonDescriptionById(this.taxons[i].id) : this.taxons[i].description
+          }
+        })
         .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
     },
 
-    fetchChannels() {
-      this.$axios.get('/api/channel')
-        .then((response) => (response.data) ? this.channelsToFrom = response.data : '')
-        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
-    },
+    getTaxonDescriptionById(taxonId) {
+      for (let i = 0; i < this.taxons.length; i++) {
+        if (this.taxons[i].id === taxonId) {
+          if (this.taxons[i].parent_taxon_id) {
+            return this.getTaxonDescriptionById(this.taxons[i].parent_taxon_id) + ' -> ' + this.taxons[i].description
+          }
 
-    fetchTaxons() {
-      this.$axios.get('/api/taxon')
-        .then((response) => (response.data) ? this.taxonsToFrom = response.data : '')
-        .catch((error) => (error.response.data.message) ? (error.response.data.message === 'The given data was invalid.' && error.response.data.errors) ? this.setServerMessage(error.response.data.errors) : this.setServerMessage(error.response.data.message) : this.setServerMessage('Error.'))
+          return this.taxons[i].description
+        }
+      }
+
+      return ''
     },
 
     // DataIterator

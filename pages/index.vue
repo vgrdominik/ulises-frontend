@@ -236,25 +236,32 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   mounted() {
     // Try to get token cookie if token isn't set
-    if (! this.$store.state.user.token || ! this.$store.state.user.user) {
+    if (!this.$store.state.user.token || !this.getUser()) {
       let token = document.cookie.match(new RegExp('(^| )token=([^;]+)'))
       if (token) {
         this.$store.dispatch('user/setToken', token[2])
 
         let user = document.cookie.match(new RegExp('(^| )user=([^;]+)'))
         if (user) {
-          this.$store.commit('user/updateUser', JSON.parse(user[2]))
+          this.$store.commit('user/updateUser', JSON.parse(decodeURI(user[2])))
         } else {
           console.log('test')
           try {
             this.$store.dispatch('user/fetchUser')
-          } catch (error) { }
+          } catch (error) {}
         }
       }
     }
-  }
+  },
+
+  methods: {
+    ...mapGetters({
+      getUser: 'user/getUser',
+    }),
+  },
 }
 </script>

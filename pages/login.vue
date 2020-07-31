@@ -2,10 +2,10 @@
     <CtCard title="Login" width="300" class="mx-auto">
       <v-row dense>
         <v-col cols="12" class="mt-5">
-          <CtTextField append-icon="mdi-email" label="Email" v-model="signInData.email"/>
+          <CtTextField append-icon="mdi-email" label="Email" v-model="signInData.email" @keyup.enter="login()" />
         </v-col>
         <v-col cols="12">
-          <CtTextField type="password" append-icon="mdi-lock" label="Password" v-model="signInData.password"/>
+          <CtTextField type="password" append-icon="mdi-lock" label="Password" v-model="signInData.password" @keyup.enter="login()" />
         </v-col>
         <v-col cols="12" v-if="serverMessage && serverMessage instanceof Object" class="error--text">
           <v-row v-for="(serverError, index) in serverMessage" :key="index">

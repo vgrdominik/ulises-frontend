@@ -104,9 +104,6 @@
         <v-row dense>
           <v-col cols="6" sm="2">
             <v-row>
-              <v-col class="text--right">
-                <CtBtn type="icon" :icon="['fas', 'chevron-left']" @click="$router.go(-1)" class="float-right mt-2" />
-              </v-col>
               <v-col class="mt-2 ml-3 pl-0">
                 <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
               </v-col>

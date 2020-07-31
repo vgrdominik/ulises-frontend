@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="type === 'default'" :shaped="! withoutShaped" v-on="$listeners" v-bind="$attrs">
-    <v-toolbar flat color="primary">
+    <v-toolbar dense flat color="primary">
       <slot name="leftTitleContent" />
 
       <v-spacer />
